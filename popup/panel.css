@@ -1,0 +1,111 @@
+/**
+ * firelux2
+ * Copyright (C) 2017  ValentinG
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @license GPLv3
+ * @author  ValentinG
+ * @version 2.0.0.0
+ * @link    https://framagit.org/ValentinG/firelux2
+ */
+
+
+/*
+html {
+    width: 295px;
+    max-width: 295px;
+}
+*/
+
+body {
+    margin-bottom: 15px;
+}
+
+div.container-fluid {
+    margin-top: 20px;
+}
+
+div.color-item {
+    height: 65px;
+}
+
+div.color-item>button {
+    width: 100%;
+    height: 100%;
+}
+
+div.color-item#orange>button {
+    background-color: rgba(255, 147, 41, 0.6);
+}
+
+div.color-item#black>button {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+div.color-item#no-color>button>img {
+    width: 100%;
+}
+
+div#color-row {
+    margin-top: 20px;
+}
+
+label[for=active-custom-color] {
+    max-width: 80%;
+    cursor: pointer;
+}
+
+input#active-custom-color {
+    right: 40px;
+    position: absolute;
+}
+
+label[for=change-auto] {
+    max-width: 80%;
+    cursor: pointer;
+}
+
+input#change-auto {
+    right: 40px;
+    position: absolute;
+}
+
+div.select-hour>select {
+    width: 49%;
+    margin-left: 10px;
+}
+
+div.select-time-hour>select,
+div.select-hour>select {
+    padding: 2px;
+}
+
+div.select-hour {
+    display: flex;
+}
+
+label[for=use-sync] {
+    max-width: 80%;
+    cursor: pointer;
+}
+
+input#use-sync {
+    right: 40px;
+    position: absolute;
+}
+
+button#save {
+    width: 100%;
+}

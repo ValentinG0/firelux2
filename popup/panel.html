@@ -1,0 +1,141 @@
+<!--
+/**
+ * firelux2
+ * Copyright (C) 2017  ValentinG
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @license GPLv3
+ * @author  ValentinG
+ * @version 2.0.0.0
+ * @link    https://framagit.org/ValentinG/firelux2
+ */
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link href="lib/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="lib/bootstrap/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <link href="panel.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 color-item" id="orange">
+                <button type="button" class="btn"></button>
+            </div>
+            <div class="col-xs-4 color-item" id="black">
+                <button type="button" class="btn"></button>
+            </div>
+            <div class="col-xs-4 color-item" id="no-color">
+                <button type="button" class="btn" id="no-color-btn">
+                    <img alt="no color" src="img/no.png" />
+                </button>
+            </div>
+        </div>
+
+        <div class="row" id="color-row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="active-custom-color-form-group">
+                        <label for="active-custom-color">
+                        </label>
+                        <input type="checkbox" id="active-custom-color" />
+                    </div>
+                    <input type="text" class="form-control jscolor" id="color" placeholder="FF9329" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label for="opacity">
+                        <span id="opacity-label">
+                        </span>
+                        <span id="intensity">
+                        </span>
+                    </label>
+                    <input type="range" id="opacity" class="form-control" min="0" max="100" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="change-auto">
+                        </label>
+                        <input type="checkbox" id="change-auto" placeholder="FF9329" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="timer">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="start-time-hour">
+                            </label>
+                        <div class="select-hour">
+                            <select class="form-control" id="start-time-hour"></select>
+                            <select class="form-control" id="start-time-minute"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="end-time-hour">
+                            </label>
+                        <div class="select-hour">
+                            <select class="form-control" id="end-time-hour"></select>
+                            <select class="form-control" id="end-time-minute"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="use-sync-row">
+            <div class="col-xs-12">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="use-sync">
+                        </label>
+                        <input type="checkbox" id="use-sync" placeholder="FF9329" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <button id="save" class="btn btn-primary">
+                </button>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script src="lib/jscolor/jscolor.js" type="text/javascript" nonce="jscolor"></script>
+<script src="panel.js" type="text/javascript"></script>
+
+</html>

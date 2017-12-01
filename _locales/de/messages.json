@@ -1,0 +1,42 @@
+{
+    "extensionName": {
+        "message": "Firelux",
+        "description": "Name of the extension."
+    },
+    "extensionDescription": {
+        "message": "Reduziert die Farbtemperatur Browser.",
+        "description": "Description of the extension."
+    },
+    "noColorTitle": {
+        "message": "Keine Filter",
+        "description": "Title of the no color button"
+    },
+    "customColorLabel": {
+        "message": "Verwenden Custom Color",
+        "description": "Label of the custom color checkbox"
+    },
+    "opacityLabel": {
+        "message": "Aktuelle Filter",
+        "description": "Label of the opacity range"
+    },
+    "changeAutoLabel": {
+        "message": "Aktivieren Sie nur in der Nacht",
+        "description": "Label of the change auto check box"
+    },
+    "sunriseLabel": {
+        "message": "Sonnenaufgang",
+        "description": "Label of the sunrise select"
+    },
+    "sunsetLabel": {
+        "message": "Sonnenuntergang",
+        "description": "Label of the sunset select"
+    },
+    "syncLabel": {
+        "message": "Mit Firefox Sync",
+        "description": "Label of the sync checkbox"
+    },
+    "saveLabel": {
+        "message": "Speichern",
+        "description": "Label of the save button"
+    }
+}
