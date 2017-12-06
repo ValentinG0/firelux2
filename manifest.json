@@ -13,9 +13,9 @@
     "homepage_url": "https://framagit.org/ValentinG/firelux2",
     "version": "2.0.0.3",
 
-    "author": "ValentinG",
+    "author": "Valentin G",
     "developer": {
-        "name": "ValentinG",
+        "name": "Valentin G",
         "url": "https://framagit.org/ValentinG"
     },
 
@@ -32,7 +32,7 @@
 
     "content_scripts": [{
         "match_about_blank": true,
-        "all_frames": true,
+        "all_frames": false,
         "run_at": "document_start",
         "matches": [
             "<all_urls>"

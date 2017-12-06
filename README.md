@@ -8,10 +8,16 @@ You can configure:
 * Automatic activation of the filter (Interval of hours)
 * Firefox Sync usage
 
-## Built With
+## Third party
 
-* [jscolor](https://github.com/EastDesire/jscolor) - The JavaScript color picker
+* [jscolor](https://github.com/EastDesire/jscolor) - A modified version of this color picker
 * [Bootstrap](https://getbootstrap.com/docs/3.3/customize/) - A customized Bootstrap 3
+
+## Known issues
+
+* The plugin can not work on some pages due to restrictions of the WebExtensions APIs.
+    * about:
+    * moz-extension://
 
 ## License
 
