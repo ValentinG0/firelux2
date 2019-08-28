@@ -94,8 +94,12 @@ var firelux = (function() {
         });
 
         browser.storage.local.get().then(function(storage) {
-            if (storage != null && storage.temperature != null) {
-                restoreStorage(storage.temperature);
+            if (storage != null && (storage.temperature != null || storage.sites != null)) {
+                if (storage.sites != null && storage.sites.hasOwnProperty(location.host)) {
+                    restoreStorage(storage.sites[location.host]);
+                } else {
+                    restoreStorage(storage.temperature);
+                }
             } else {
                 restoreStorage(null);
             }

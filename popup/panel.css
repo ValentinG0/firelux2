@@ -106,6 +106,16 @@ input#use-sync {
     position: absolute;
 }
 
+label[for=site-only] {
+    max-width: 80%;
+    cursor: pointer;
+}
+
+input#site-only {
+    right: 40px;
+    position: absolute;
+}
+
 button#save {
     width: 100%;
 }

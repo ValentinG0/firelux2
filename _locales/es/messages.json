@@ -23,6 +23,10 @@
         "message": "Habilitar sólo por la noche",
         "description": "Label of the change auto check box"
     },
+    "siteOnlyLabel": {
+        "message": "Aplicar sólo para este sitio",
+        "description": "Label of the site only checkbox"
+    },
     "sunriseLabel": {
         "message": "Salida del sol",
         "description": "Label of the sunrise select"

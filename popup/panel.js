@@ -31,6 +31,9 @@ var firelux = (function() {
     var opacityMax = 0.9;
     var opacityRangeMax = 100;
 
+    //Default data
+    var defaultTemperature = null;
+
     //Local data
     var localTemperature = {
         color: orange_colorCode,
@@ -47,7 +50,7 @@ var firelux = (function() {
         value: false,
         date: null
     };
-
+    var localSites = {};
 
     /**
      * Add all event.
@@ -110,8 +113,10 @@ var firelux = (function() {
                 setUseSync(this.checked);
         });
 
+        document.getElementById("site-only").addEventListener("change", eventSiteOnlyChange);
+
         document.getElementById("save").addEventListener("click", function() {
-            save();
+            save(document.getElementById("site-only").checked);
         });
     };
 
@@ -122,7 +127,8 @@ var firelux = (function() {
      */
     var chooseDataToRestore = function(syncStorage, storage) {
         if ((storage == null || storage.temperature == null) &&
-            (syncStorage == null || syncStorage.temperature == null)) {
+            (syncStorage == null || syncStorage.temperature == null) &&
+            (storage.sites == null || isEmptyObject(storage.sites))) {
             restoreOptions(null);
             return;
         }
@@ -215,6 +221,34 @@ var firelux = (function() {
     };
 
     /**
+     * Call on change for site only checkbox.
+     */
+    var eventSiteOnlyChange = function() {
+        if (!this.checked && defaultTemperature != null) {
+            if (this.dataset.hasOwnProperty("host") && localSites.hasOwnProperty(this.dataset.host)) {
+                delete localSites[this.dataset.host];
+            }
+
+            localTemperature = defaultTemperature;
+            defaultTemperature = null;
+
+            restoreOptions({temperature: localTemperature, useSync: localUseSync, sites: localSites});
+        }
+    };
+
+    /**
+     * Get host from URL.
+     * @param {string} url - URL string.
+     */
+    var getURLHost = function(url) {
+        try {
+            return (new URL(url)).host; // Host can be an empty string
+        } catch (error) {
+            return "";
+        }
+    };
+
+    /**
      * Initialization.
      */
     var init = function() {
@@ -267,6 +301,7 @@ var firelux = (function() {
     var isValidStorageObject = function(obj) {
         if (!(obj.hasOwnProperty("temperature") ||
                 obj.hasOwnProperty("useSync") ||
+                obj.hasOwnProperty("sites") ||
                 obj.useSync.hasOwnProperty("value") ||
                 obj.useSync.hasOwnProperty("date") ||
                 obj.temperature.hasOwnProperty("color") ||
@@ -278,6 +313,21 @@ var firelux = (function() {
                 obj.temperature.hasOwnProperty("timerenabled") ||
                 obj.temperature.hasOwnProperty("iscustom"))) {
             return false;
+        }
+
+        if (obj.hasOwnProperty("sites") && !isEmptyObject(obj.sites)) {
+            for (var temperature of Object.values(obj.sites)) {
+                if (!(temperature.hasOwnProperty("color") ||
+                        temperature.hasOwnProperty("alpha") ||
+                        temperature.hasOwnProperty("starthour") ||
+                        temperature.hasOwnProperty("startminute") ||
+                        temperature.hasOwnProperty("endhour") ||
+                        temperature.hasOwnProperty("endminute") ||
+                        temperature.hasOwnProperty("timerenabled") ||
+                        temperature.hasOwnProperty("iscustom"))) {
+                    return false;
+                }
+            } 
         }
 
         return true;
@@ -310,6 +360,9 @@ var firelux = (function() {
 
         var saveLabel = browser.i18n.getMessage("saveLabel");
         document.getElementById("save").textContent = saveLabel;
+
+        var siteOnlyLabel = browser.i18n.getMessage("siteOnlyLabel");
+        document.querySelector("label[for=site-only]").textContent = siteOnlyLabel;
     };
 
     /**
@@ -333,6 +386,8 @@ var firelux = (function() {
      * @param {object} storage - Content of storage.
      */
     var restoreOptions = function(storage) {
+        var tabPromise = null;
+
         if (storage != null) {
             if (storage.temperature != null && !isEmptyObject(storage.temperature)) {
                 localTemperature = storage.temperature;
@@ -341,8 +396,34 @@ var firelux = (function() {
             if (storage.useSync != null) {
                 localUseSync = storage.useSync
             }
+
+            if (storage.sites != null && !isEmptyObject(storage.sites)) {
+                localSites = storage.sites;
+
+                tabPromise = browser.tabs.query({active: true, currentWindow: true}).then(function(tabs) {
+                    var host = getURLHost(tabs[0].url);
+
+                    if (host != "" && localSites.hasOwnProperty(host)) {
+                        defaultTemperature = localTemperature;
+                        localTemperature = localSites[host];
+                        
+                        document.getElementById("site-only").dataset.host = host;
+                    }
+                }).catch(function() {});
+            }
         }
 
+        if (tabPromise != null) {
+            tabPromise.then(restoreUIElements);
+        } else {
+            restoreUIElements();
+        }
+    };
+
+    /**
+     * Restore user interface elements.
+     */
+    var restoreUIElements = function() {
         if (!syncStorageAvailable) {
             document.getElementById("use-sync-row").style.display = "none";
         }
@@ -357,6 +438,7 @@ var firelux = (function() {
         document.getElementById("end-time-minute").value = localTemperature.endminute;
 
         document.getElementById("use-sync").checked = localUseSync.value;
+        document.getElementById("site-only").checked = defaultTemperature != null;
 
         customColor(localTemperature.iscustom);
         timerenabled(localTemperature.timerenabled, true);
@@ -364,40 +446,78 @@ var firelux = (function() {
 
     /**
      * Save configuration.
+     * @param {boolean} siteOnly - Saves configuration for the site only.
      */
-    var save = function() {
-        var storePromises = [];
+    var save = function(siteOnly) {
+        var tabPromise = siteOnly ? browser.tabs.query({active: true, currentWindow: true}) : Promise.resolve(null);
+        
+        tabPromise.catch(function() {}).then(function(tabs) {
+            var storePromises = [];
 
-        var toStore = {
-            temperature: localTemperature,
-            useSync: localUseSync
-        };
+            var toStore = {
+                temperature: localTemperature,
+                useSync: localUseSync,
+                sites: localSites
+            };
 
-        var localStorage = browser.storage.local.set(toStore);
-        storePromises.push(localStorage);
+            var tabQuery = {};
 
-        if (toStore.useSync.value) {
-            toStore.useSync.date = new Date();
-            var syncStorage = browser.storage.sync.set(toStore);
-            storePromises.push(syncStorage);
-        }
+            if (tabs != null) {
+                var host = getURLHost(tabs[0].url);
 
-        Promise.all(storePromises).then(function(t) {
-            browser.tabs.query({}).then(function(tabs) {
-                for (var tab of tabs) {
-                    browser.tabs.sendMessage(tab.id, { temperature: localTemperature }).catch(function() {});
+                if (host != "") {
+                    localSites[host] = localTemperature;
+                    tabQuery["url"] = "*://" + host + "/*";
+
+                    delete toStore.temperature; // Do not save the current temperature as default
+                } else {
+                    siteOnly = false;
                 }
+            }
 
-                setTimeout(function() {
-                    window.close();
-                }, tabs.length * 2);
-            }).catch(function() {
-                console.log("error refresh temperature : ");
+            var localStorage = browser.storage.local.set(toStore);
+            storePromises.push(localStorage);
+
+            if (toStore.useSync.value) {
+                toStore.useSync.date = new Date();
+                var syncStorage = browser.storage.sync.set(toStore);
+                storePromises.push(syncStorage);
+            }
+
+            Promise.all(storePromises).then(function(t) {
+                browser.tabs.query(tabQuery).then(function(tabs) {
+                    sendMessageToTabs(tabs, siteOnly);
+                }).catch(function(reason) {
+                    console.log("error communicate tabs : ");
+                    console.log(reason);
+                });
+            }).catch(function(reason) {
+                console.log("error save temperature : ");
                 console.log(reason);
             });
-        }).catch(function() {
-            console.log("error save temperature : ");
+        }).catch(function(reason) {
+            console.log("error refresh temperature : ");
             console.log(reason);
+        });
+    };
+
+    /**
+     * Send message to tabs.
+     * @param {array} tabs - List of tabs.
+     * @param {boolean} siteOnly - Indicates if the temperature is for the site only.
+     */
+    var sendMessageToTabs = function(tabs, siteOnly) {
+        var tabPromises = [];
+
+        for (var tab of tabs) {
+            // Default temperature does not apply on sites with specific temperature
+            if (siteOnly || !localSites.hasOwnProperty(getURLHost(tab.url))) {
+                tabPromises.push(browser.tabs.sendMessage(tab.id, { temperature: localTemperature }));
+            }
+        }
+
+        Promise.all(tabPromises).catch(function() {}).then(function() {
+            window.close();
         });
     };
 
