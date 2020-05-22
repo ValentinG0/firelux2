@@ -1,6 +1,6 @@
 /**
  * firelux2
- * Copyright (C) 2017  ValentinG
+ * Copyright (C) 2020  ValentinG
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,13 @@
  *
  * @license GPLv3
  * @author  ValentinG
- * @version 2.0.0.0
+ * @version 2.0.0.5
  * @link    https://framagit.org/ValentinG/firelux2
  */
 
 var firelux = (function() {
+
+    var runtimePort;
 
     //Predefined color
     var black_colorCode = "000000";
@@ -30,6 +32,18 @@ var firelux = (function() {
     //Opacity config
     var opacityMax = 0.9;
     var opacityRangeMax = 100;
+
+    //Stored data
+    var storedTemperature = {
+        color: orange_colorCode,
+        alpha: 0.3,
+        starthour: "00",
+        startminute: "00",
+        endhour: "00",
+        endminute: "00",
+        timerenabled: false,
+        iscustom: false
+    };
 
     //Local data
     var localTemperature = {
@@ -53,7 +67,6 @@ var firelux = (function() {
      * Add all event.
      */
     var addEvent = function() {
-
         document.getElementById("orange").addEventListener("click", function() {
             updateColor(orange_colorCode, false);
         });
@@ -218,6 +231,7 @@ var firelux = (function() {
      * Initialization.
      */
     var init = function() {
+        startBeat();
         localization();
 
         if (browser.storage.sync != null)
@@ -336,6 +350,7 @@ var firelux = (function() {
         if (storage != null) {
             if (storage.temperature != null && !isEmptyObject(storage.temperature)) {
                 localTemperature = storage.temperature;
+                storedTemperature = storage.temperature;
             }
 
             if (storage.useSync != null) {
@@ -360,6 +375,7 @@ var firelux = (function() {
 
         customColor(localTemperature.iscustom);
         timerenabled(localTemperature.timerenabled, true);
+        document.body.style.display = "block";
     };
 
     /**
@@ -383,6 +399,7 @@ var firelux = (function() {
         }
 
         Promise.all(storePromises).then(function(t) {
+            storedTemperature = localTemperature;
             browser.tabs.query({}).then(function(tabs) {
                 for (var tab of tabs) {
                     browser.tabs.sendMessage(tab.id, { temperature: localTemperature }).catch(function() {});
@@ -456,6 +473,17 @@ var firelux = (function() {
                 document.getElementById("save").disabled = false;
             });
         }
+    };
+
+    var startBeat = function() {
+        var beat = function() {
+            browser.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
+                browser.tabs.sendMessage(tabs[0].id, { isAlive: true }).catch(function() {});
+            }).catch(function() {});
+        };
+
+        beat();
+        setTimeout(startBeat, 250);
     };
 
     /**

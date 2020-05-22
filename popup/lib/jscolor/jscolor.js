@@ -637,13 +637,13 @@ if (!window.jscolor) {
 
                 switch (controlName) {
                     case 'pad':
-                        // if the slider is at the bottom, move it up
+                        // if the slider is at the bottom, move it to set position
                         switch (jsc.getSliderComponent(thisObj)) {
                             case 's':
-                                if (thisObj.hsv[1] === 0) { thisObj.fromHSV(null, 100, null); };
+                                if (thisObj.hsv[1] === 0) { thisObj.fromHSV(null, thisObj.sliderAtBottomMoveTo, null); };
                                 break;
                             case 'v':
-                                if (thisObj.hsv[2] === 0) { thisObj.fromHSV(null, null, 100); };
+                                if (thisObj.hsv[2] === 0) { thisObj.fromHSV(null, null, thisObj.sliderAtBottomMoveTo); };
                                 break;
                         }
                         jsc.setPad(thisObj, e, 0, 0);
@@ -1021,6 +1021,7 @@ if (!window.jscolor) {
                 this.maxS = 100; // max allowed saturation (0 - 100)
                 this.minV = 0; // min allowed value (brightness) (0 - 100)
                 this.maxV = 100; // max allowed value (brightness) (0 - 100)
+                this.sliderAtBottomMoveTo = 100; // if the slider is at the bottom, move it to set position
 
                 // Accessing the picked color
                 //

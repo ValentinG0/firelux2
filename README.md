@@ -15,9 +15,10 @@ You can configure:
 
 ## Known issues
 
-* The plugin can not work on some pages due to restrictions of the WebExtensions APIs.
+* The plugin cannot work on some pages due to restrictions of the WebExtensions APIs.
     * about:
     * moz-extension://
+    * [AMO](https://addons.mozilla.org/firefox/addon/firelux/)
 
 ## License
 
