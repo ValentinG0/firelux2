@@ -18,7 +18,7 @@
  *
  * @license GPLv3
  * @author  ValentinG
- * @version 2.0.0.5
+ * @version 2.0.1.0
  * @link    https://framagit.org/ValentinG/firelux2
  */
 -->
@@ -28,13 +28,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <link href="lib/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="lib/bootstrap/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <link href="../common/lib/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="../common/lib/bootstrap/bootstrap-theme.css" rel="stylesheet" type="text/css" />
     <link href="panel.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
     <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <button id="disable-current" class="">
+                </button>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-xs-4 color-item" id="orange">
                 <button type="button" class="btn"></button>
@@ -135,7 +142,8 @@
     </div>
 </body>
 
-<script src="lib/jscolor/jscolor.js" type="text/javascript" nonce="jscolor"></script>
+<script src="../common/lib/jscolor/jscolor.js" type="text/javascript" nonce="jscolor"></script>
+<script src="../common/common.js" type="text/javascript" nonce="jscolor"></script>
 <script src="panel.js" type="text/javascript"></script>
 
 </html>

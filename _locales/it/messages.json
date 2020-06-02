@@ -4,66 +4,66 @@
         "description": "Name of the extension."
     },
     "extensionDescription": {
-        "message": "Reduces the color temperature of browser.",
+        "message": "Riduce la temperatura del colore del browser.",
         "description": "Description of the extension."
     },
 
     "panel_disableCurrentTabDisabledLabel": {
-        "message": "Deactivate for this website",
+        "message": "Disattivare per questo sito web",
         "description": "Title of the button which deactivates the current tab when the site can be disabled."
     },
     "panel_disableCurrentTabEnabledLabel": {
-        "message": "Activate for this website",
+        "message": "Attivare per questo sito web",
         "description": "Title of the button which deactivates the current tab when the site can be enabled."
     },
     "panel_disableCurrentTabNotSupportedLabel": {
-        "message": "Unsupported website",
+        "message": "Sito web non supportato",
         "description": "Title of the button which deactivates the current tab when the site is not supported."
     },
     "panel_noColorTitle": {
-        "message": "No filter",
+        "message": "Nessun filtro",
         "description": "Title of the no color button"
     },
     "panel_customColorLabel": {
-        "message": "Using a Custom Color",
+        "message": "Utilizzo di un colore personalizzato",
         "description": "Label of the custom color checkbox"
     },
     "panel_opacityLabel": {
-        "message": "Filter intensity",
+        "message": "Intensità del filtro",
         "description": "Label of the opacity range"
     },
     "panel_changeAutoLabel": {
-        "message": "Activate only at night",
+        "message": "Attivare solo di notte",
         "description": "Label of the change auto check box"
     },
     "panel_sunriseLabel": {
-        "message": "Sunrise",
+        "message": "Alba",
         "description": "Label of the sunrise select"
     },
     "panel_sunsetLabel": {
-        "message": "Sunset",
+        "message": "Tramonto",
         "description": "Label of the sunset select"
     },
     "panel_syncLabel": {
-        "message": "Using Firefox Sync",
+        "message": "Utilizzo di Firefox Sync",
         "description": "Label of the sync checkbox"
     },
 
     "common_saveLabel": {
-        "message": "Save",
+        "message": "Salva",
         "description": "Label of the save button"
     },
 
     "options_ignoreListLabel": {
-        "message": "List of ignored websites",
+        "message": "Elenco dei siti web ignorati",
         "description": "Label of the ignore list textarea."
     },
     "options_infoLabel": {
-        "message": "One domain name per line.",
+        "message": "Un nome di dominio per riga.",
         "description": "Text of the info part."
     },
     "options_exampleLabel": {
-        "message": "Example :",
+        "message": "Esempio :",
         "description": "Label of the example text."
     },
     "options_exampleListLabel": {

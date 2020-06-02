@@ -17,14 +17,11 @@
  *
  * @license GPLv3
  * @author  ValentinG
- * @version 2.0.0.5
+ * @version 2.0.1.0
  * @link    https://framagit.org/ValentinG/firelux2
  */
 
 var firelux = (function() {
-
-    //Predefined color
-    var orange_colorCode = "FF9329";
 
     var changeAutoIntervalId = null;
 
@@ -32,27 +29,36 @@ var firelux = (function() {
     var lastAlive = null;
 
     //Local data
-    var temperature = {
-        enabled: false,
-        enabledByTimer: false,
-        color: orange_colorCode,
-        alpha: 0.3,
-        starthour: "01",
-        startminute: "00",
-        endhour: "01",
-        endminute: "00",
-        timerenabled: false,
-        iscustom: false
-    };
+    var temperature = null;
+    var ignoreList = [];
 
+
+    /**
+     * Check change auto required and apply color.
+     */
+    var apply = function() {
+        if (!mustBeIgnored()) {
+            if (!temperature.timerEnabled && changeAutoIntervalId != null) {
+                clearInterval(changeAutoIntervalId);
+                changeAutoIntervalId = null;
+            }
+
+            if (temperature.timerEnabled)
+                checkTemparatureEnabledByTimer();
+            else
+                temperature.enabled = true;
+        } else
+            temperature.enabled = false;
+
+        applyColor();
+    };
 
     /**
      * Apply configuration.
      */
-    var applycolor = function() {
-        if (document.getElementById("fireluxOverlay") != null) {
+    var applyColor = function() {
+        if (document.getElementById("fireluxOverlay") != null)
             document.getElementById("fireluxOverlay").remove();
-        }
 
         if (temperature.enabled || temperature.enabledByTimer) {
             var div = document.createElement('div');
@@ -66,75 +72,43 @@ var firelux = (function() {
             div.style.top = 0;
             div.style.left = 0;
             div.style.mixBlendMode = "multiply";
+            div.style.opacity = 1;
 
-            div.style["background-color"] = ("#" + temperature.color);
-            div.style.opacity = temperature.alpha;
+            var color = fireluxUtils.color.hexToRgb(("#" + temperature.color));
+            div.style["background-color"] = "rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + temperature.alpha + ")";
 
             // Todo: if temperature.enabledByTimer animation
+            // div.style.transition = "all 2s linear";
+
             document.documentElement.appendChild(div);
         }
     };
 
     /**
-     * Change auto check and enable. 
+     * Check if filter should be enabled by timer.
      */
-    var start = function() {
-        if (!temperature.timerenabled && changeAutoIntervalId != null) {
-            clearInterval(changeAutoIntervalId);
-            changeAutoIntervalId = null;
+    var checkTemparatureEnabledByTimer = function() {
+        var currentDate = new Date();
+        var timerstart = new Date();
+        var timerend = new Date();
+
+        timerstart.setHours(temperature.starthour);
+        timerstart.setMinutes(temperature.startminute);
+        timerstart.setSeconds(0, 0);
+        timerend.setHours(temperature.endhour);
+        timerend.setMinutes(temperature.endminute);
+        timerend.setSeconds(0, 0);
+
+        if (timerstart > timerend)
+            timerend.setDate(timerend.getDate() + 1);
+
+        temperature.enabledByTimer = timerstart < currentDate && timerend > currentDate;
+
+        if (changeAutoIntervalId == null) {
+            changeAutoIntervalId = setInterval(function() {
+                apply();
+            }, (60 * 1000));
         }
-
-        if (temperature.timerenabled) {
-            var currentDate = new Date();
-            var timerstart = new Date();
-            var timerend = new Date();
-
-            timerstart.setHours(temperature.starthour);
-            timerstart.setMinutes(temperature.startminute);
-            timerstart.setSeconds(0, 0);
-            timerend.setHours(temperature.endhour);
-            timerend.setMinutes(temperature.endminute);
-            timerend.setSeconds(0, 0);
-
-            if (timerstart > timerend) {
-                timerend.setDate(timerend.getDate() + 1);
-            }
-
-            temperature.enabledByTimer = timerstart < currentDate && timerend > currentDate;
-
-            if (changeAutoIntervalId == null) {
-                changeAutoIntervalId = setInterval(function() {
-                    start();
-                }, (60 * 1000));
-            }
-        } else {
-            temperature.enabled = true;
-        }
-
-        applycolor();
-    };
-
-    /**
-     * Start beat in order to cancel the preview of the modifications if the panel is closed.
-     */
-    var startBeat = function() {
-        if (beatStarted)
-            return;
-
-        beatStarted = true;
-        var beat = function() {
-            setTimeout(function() {
-                var limit = new Date();
-                limit.setMilliseconds((limit.getMilliseconds() - 500));
-                if (lastAlive <= limit) {
-                    restoreLocalStorage();
-                    beatStarted = false;
-                } else
-                    beat();
-            }, 500);
-        };
-
-        beat();
     };
 
     /**
@@ -149,57 +123,68 @@ var firelux = (function() {
                 return;
             }
 
-            initStorage(request.temperature);
+            if (request.refreshData) {
+                restoreStorage();
+                return;
+            }
+
+            temperature = request.temperature;
+            apply();
         });
 
-        restoreLocalStorage();
+        restoreStorage();
     };
 
     /**
-     * Restore configuration.
-     * @param {object} storage - 'temperature' object to storage.
+     * Check if current tab should be ignored.
+     * @returns {boolean} - Current tab must be ignored.
      */
-    var initStorage = function(storage) {
-        initialized = true;
-
-        if (storage != null && !isEmptyObject(storage)) {
-            temperature = storage;
-        }
-
-        start();
-    };
-
-    /**
-     * Check if object is empty.
-     * @param {object} obj - Object to test.
-     */
-    var isEmptyObject = function(obj) {
-        var name;
-        for (name in obj) {
-            return false;
-        }
-        return true;
+    var mustBeIgnored = function() {
+        var host = fireluxUtils.cleanUrl(new URL(window.location.href));
+        var result = host == null || ignoreList.includes(host);
+        return result;
     };
 
     /**
      * Restore configuration from local storage.
      */
-    var restoreLocalStorage = function() {
-        browser.storage.local.get().then(function(storage) {
-            if (storage != null && storage.temperature != null) {
-                initStorage(storage.temperature);
-            } else {
-                initStorage(null);
-            }
-        }, function() {
-            initStorage(null);
+    var restoreStorage = function() {
+        fireluxUtils.getBestStorage().then(function(storage) {
+            ignoreList = storage.ignoreList;
+            temperature = storage.temperature;
+            apply();
         });
     };
 
+    /**
+     * Start beat in order to cancel the preview of the modifications if the panel is closed.
+     */
+    var startBeat = function() {
+        if (beatStarted)
+            return;
 
+        beatStarted = true;
+
+        var beat = function() {
+            setTimeout(function() {
+                var limit = new Date();
+                limit.setMilliseconds((limit.getMilliseconds() - 500));
+                if (lastAlive <= limit) {
+                    restoreStorage();
+                    beatStarted = false;
+                } else
+                    beat();
+            }, 250);
+        };
+
+        beat();
+    };
 
 
     return {
+        /**
+         * Initialization.
+         */
         init: init
     };
 })();

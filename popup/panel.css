@@ -17,13 +17,18 @@
  *
  * @license GPLv3
  * @author  ValentinG
- * @version 2.0.0.5
+ * @version 2.0.1.0
  * @link    https://framagit.org/ValentinG/firelux2
  */
 
 body {
     display: none;
-    padding: 20px 0px;
+    padding: 10px 0px;
+}
+
+button#disable-current {
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 div.color-item {

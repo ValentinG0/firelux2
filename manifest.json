@@ -11,7 +11,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "homepage_url": "https://framagit.org/ValentinG/firelux2",
-    "version": "2.0.0.5",
+    "version": "2.0.1.0",
 
     "author": "Valentin G",
     "developer": {
@@ -27,7 +27,8 @@
     },
 
     "permissions": [
-        "storage"
+        "storage",
+        "tabs"
     ],
 
     "content_scripts": [{
@@ -37,7 +38,10 @@
         "matches": [
             "<all_urls>"
         ],
-        "js": ["content_scripts/page_script.js"]
+        "js": [
+            "common/common.js",
+            "content_scripts/page_script.js"
+        ]
     }],
 
     "browser_action": {
@@ -53,6 +57,10 @@
         "default_title": "__MSG_extensionName__",
         "default_popup": "popup/panel.html",
         "default_area": "navbar"
+    },
+
+    "options_ui": {
+        "page": "options/options.html"
     }
 
 }

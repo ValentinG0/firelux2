@@ -7,36 +7,67 @@
         "message": "Reduziert die Farbtemperatur Browser.",
         "description": "Description of the extension."
     },
-    "noColorTitle": {
+
+    "panel_disableCurrentTabDisabledLabel": {
+        "message": "Deaktivieren für diese Website",
+        "description": "Title of the button which deactivates the current tab when the site can be disabled."
+    },
+    "panel_disableCurrentTabEnabledLabel": {
+        "message": "Aktivieren für diese Website",
+        "description": "Title of the button which deactivates the current tab when the site can be enabled."
+    },
+    "panel_disableCurrentTabNotSupportedLabel": {
+        "message": "Nicht unterstützte Website",
+        "description": "Title of the button which deactivates the current tab when the site is not supported."
+    },
+    "panel_noColorTitle": {
         "message": "Keine Filter",
         "description": "Title of the no color button"
     },
-    "customColorLabel": {
+    "panel_customColorLabel": {
         "message": "Verwenden Custom Color",
         "description": "Label of the custom color checkbox"
     },
-    "opacityLabel": {
+    "panel_opacityLabel": {
         "message": "Aktuelle Filter",
         "description": "Label of the opacity range"
     },
-    "changeAutoLabel": {
+    "panel_changeAutoLabel": {
         "message": "Aktivieren Sie nur in der Nacht",
         "description": "Label of the change auto check box"
     },
-    "sunriseLabel": {
+    "panel_sunriseLabel": {
         "message": "Sonnenaufgang",
         "description": "Label of the sunrise select"
     },
-    "sunsetLabel": {
+    "panel_sunsetLabel": {
         "message": "Sonnenuntergang",
         "description": "Label of the sunset select"
     },
-    "syncLabel": {
+    "panel_syncLabel": {
         "message": "Mit Firefox Sync",
         "description": "Label of the sync checkbox"
     },
-    "saveLabel": {
+
+    "common_saveLabel": {
         "message": "Speichern",
         "description": "Label of the save button"
+    },
+
+    "options_ignoreListLabel": {
+        "message": "Liste der ignorierten Websites",
+        "description": "Label of the ignore list textarea."
+    },
+    "options_infoLabel": {
+        "message": "Ein Domain-Name pro Zeile.",
+        "description": "Text of the info part."
+    },
+    "options_exampleLabel": {
+        "message": "Beispiel :",
+        "description": "Label of the example text."
+    },
+    "options_exampleListLabel": {
+        "message": "google.com\nyoutube.com",
+        "description": "Content of the example text."
     }
 }
